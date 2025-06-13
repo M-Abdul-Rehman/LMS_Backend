@@ -1,10 +1,20 @@
-import { Entity, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  CreateDateColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Enrollment } from 'src/enrollments/enrollment.entity';
 import { Result } from 'src/results/result.entity';
 
 @Entity('students')
 export class Student {
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ default: null })
+  studentId: string;
 
   @Column()
   firstName: string;
@@ -30,11 +40,7 @@ export class Student {
   @CreateDateColumn()
   createdAt: Date;
 
-  // Relations
-  @OneToMany(
-    (): typeof Enrollment => Enrollment,
-    (enrollment): Student => enrollment.student,
-  )
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.student)
   enrollments: Enrollment[];
 
   @OneToMany(() => Result, (result) => result.student)

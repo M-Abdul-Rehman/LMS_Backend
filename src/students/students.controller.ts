@@ -23,9 +23,9 @@ export class StudentsController {
     return this.studentsService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Student> {
-    const student = await this.studentsService.findOne(id);
+  @Get(':studentId')
+  async findOne(@Param('studentId') studentId: string): Promise<Student> {
+    const student = await this.studentsService.findOne(studentId);
     if (!student) throw new NotFoundException('Student not found');
     return student;
   }
@@ -39,16 +39,16 @@ export class StudentsController {
     return this.studentsService.create(data);
   }
 
-  @Put(':id')
+  @Put(':studentId')
   async update(
-    @Param('id') id: string,
+    @Param('studentId') studentId: string,
     @Body() data: Partial<Student>,
   ): Promise<Student> {
-    return this.studentsService.update(id, data);
+    return this.studentsService.update(studentId, data);
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string): Promise<void> {
-    return this.studentsService.remove(id);
+  @Delete(':studentId')
+  async remove(@Param('studentId') studentId: string): Promise<void> {
+    return this.studentsService.remove(studentId);
   }
 }
