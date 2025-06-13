@@ -14,10 +14,7 @@ export class Enrollment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(
-    (): typeof Student => Student,
-    (student): Enrollment[] => student.enrollments,
-  )
+  @ManyToOne(() => Student, (student) => student.enrollments)
   student: Student;
 
   @ManyToOne(
