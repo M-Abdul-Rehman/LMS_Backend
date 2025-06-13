@@ -15,8 +15,8 @@ export class StudentsService {
     return this.studentRepo.find();
   }
 
-  async findOne(id: string): Promise<Student | null> {
-    return await this.studentRepo.findOne({ where: { id } });
+  async findOne(studentId: string): Promise<Student | null> {
+    return await this.studentRepo.findOne({ where: { studentId } });
   }
 
   async create(data: CreateStudentDto): Promise<Student> {
@@ -24,15 +24,15 @@ export class StudentsService {
     return this.studentRepo.save(student);
   }
 
-  async update(id: string, data: Partial<Student>): Promise<Student> {
-    const student = await this.findOne(id);
+  async update(studentId: string, data: Partial<Student>): Promise<Student> {
+    const student = await this.findOne(studentId);
     if (!student) throw new NotFoundException('Student not found');
     Object.assign(student, data);
     return this.studentRepo.save(student);
   }
 
-  async remove(id: string): Promise<void> {
-    const student = await this.findOne(id);
+  async remove(studentId: string): Promise<void> {
+    const student = await this.findOne(studentId);
     if (!student) throw new NotFoundException('Student not found');
     await this.studentRepo.remove(student);
   }
