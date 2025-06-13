@@ -1,16 +1,9 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  OneToMany,
-} from 'typeorm';
+import { Entity, Column, CreateDateColumn, OneToMany } from 'typeorm';
 import { Enrollment } from 'src/enrollments/enrollment.entity';
 import { Result } from 'src/results/result.entity';
 
 @Entity('students')
 export class Student {
-  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
