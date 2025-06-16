@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { ResultsService } from './results.service';
 import { Result } from './result.entity';
+import { CreateResultDto } from './result.dto';
 
 @Controller('results')
 export class ResultsController {
@@ -25,14 +26,14 @@ export class ResultsController {
   }
 
   @Post()
-  create(@Body() data: Partial<Result>): Promise<Result> {
+  create(@Body() data: CreateResultDto): Promise<Result> {
     return this.resultsService.create(data);
   }
 
   @Put(':id')
   update(
     @Param('id') id: string,
-    @Body() data: Partial<Result>,
+    @Body() data: CreateResultDto,
   ): Promise<Result> {
     return this.resultsService.update(id, data);
   }

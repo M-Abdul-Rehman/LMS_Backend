@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Class } from './class.entity';
+import { CreateClassDto } from './class.dto';
 
 @Injectable()
 export class ClassesService {
@@ -20,12 +21,12 @@ export class ClassesService {
     return cls;
   }
 
-  create(data: Partial<Class>): Promise<Class> {
+  create(data: CreateClassDto): Promise<Class> {
     const cls = this.classesRepository.create(data);
     return this.classesRepository.save(cls);
   }
 
-  async update(id: string, data: Partial<Class>): Promise<Class> {
+  async update(id: string, data: CreateClassDto): Promise<Class> {
     const cls = await this.findOne(id);
     Object.assign(cls, data);
     return this.classesRepository.save(cls);
