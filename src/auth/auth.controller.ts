@@ -17,7 +17,11 @@ export class AuthController {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { sub: student.id, studentId: student.studentId };
+    const payload = {
+      sub: student.id,
+      studentId: student.studentId,
+      role: 'student',
+    };
     const token = this.jwtService.sign(payload);
 
     return {
