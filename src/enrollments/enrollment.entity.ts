@@ -4,9 +4,16 @@ import {
   ManyToOne,
   CreateDateColumn,
   Unique,
+  Column,
 } from 'typeorm';
-import { Student } from 'src/students/student.entity';
-import { Class } from 'src/classes/class.entity';
+import { Student } from '../students/student.entity';
+import { Class } from '../classes/class.entity';
+
+export enum EnrollmentStatus {
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+}
 
 @Entity('enrollments')
 @Unique(['student', 'class'])
@@ -17,11 +24,15 @@ export class Enrollment {
   @ManyToOne(() => Student, (student) => student.enrollments)
   student: Student;
 
-  @ManyToOne(
-    (): typeof Class => Class,
-    (cls: Class): Enrollment[] => cls.enrollments,
-  )
+  @ManyToOne(() => Class, (cls) => cls.enrollments)
   class: Class;
+
+  @Column({
+    type: 'enum',
+    enum: EnrollmentStatus,
+    default: EnrollmentStatus.PENDING,
+  })
+  status: EnrollmentStatus;
 
   @CreateDateColumn()
   enrolledAt: Date;
