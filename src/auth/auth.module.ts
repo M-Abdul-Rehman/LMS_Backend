@@ -7,7 +7,7 @@ import { StudentsModule } from '../students/students.module';
   imports: [
     StudentsModule,
     JwtModule.register({
-      secret: 'your_jwt_secret_key', // use a secure secret in production
+      secret: 'your_jwt_secret_key',
       signOptions: { expiresIn: '1h' },
     }),
   ],
