@@ -12,6 +12,7 @@ import { EnrollmentsService } from './enrollments.service';
 import { Enrollment } from './enrollment.entity';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { EnrollmentStatus } from './enrollment.entity';
+import { CreateEnrollmentDto } from './enrollment.dto';
 
 @ApiTags('Enrollments')
 @Controller('enrollments')
@@ -39,7 +40,7 @@ export class EnrollmentsController {
   @Post()
   @ApiOperation({ summary: 'Create a new enrollment' })
   @ApiResponse({ status: 201, description: 'Enrollment created' })
-  create(@Body() data: Partial<Enrollment>): Promise<Enrollment> {
+  create(@Body() data: CreateEnrollmentDto): Promise<Enrollment> {
     return this.enrollmentsService.create(data);
   }
 

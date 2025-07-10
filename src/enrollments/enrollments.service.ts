@@ -1,14 +1,11 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Enrollment } from './enrollment.entity';
 import { EnrollmentStatus } from './enrollment.entity';
 import { Student } from '../students/student.entity';
 import { Class } from '../classes/class.entity';
+import { CreateEnrollmentDto } from './enrollment.dto';
 
 @Injectable()
 export class EnrollmentsService {
@@ -23,7 +20,7 @@ export class EnrollmentsService {
 
   async findAll(
     status?: EnrollmentStatus,
-    studentId?: string,
+    studentStringId?: string,
   ): Promise<Enrollment[]> {
     const query = this.enrollmentRepo
       .createQueryBuilder('enrollment')
@@ -34,8 +31,10 @@ export class EnrollmentsService {
       query.where('enrollment.status = :status', { status });
     }
 
-    if (studentId) {
-      query.andWhere('enrollment.studentId = :studentId', { studentId });
+    if (studentStringId) {
+      query.andWhere('student.studentId = :studentStringId', {
+        studentStringId,
+      });
     }
 
     return query.getMany();
@@ -52,36 +51,32 @@ export class EnrollmentsService {
     return enrollment;
   }
 
-  async create(data: Partial<Enrollment>): Promise<Enrollment> {
-    if (!data.student || !data.student.id) {
-      throw new BadRequestException('Student ID is required');
-    }
-
-    if (!data.class || !data.class.id) {
-      throw new BadRequestException('Class ID is required');
-    }
-
-    // Verify student exists
+  async create(data: CreateEnrollmentDto): Promise<Enrollment> {
+    // Find student by string ID
     const student = await this.studentRepo.findOne({
-      where: { id: data.student.id },
+      where: { studentId: data.studentId },
     });
+
     if (!student) {
-      throw new NotFoundException(`Student ID ${data.student.id} not found`);
+      throw new NotFoundException(
+        `Student with ID ${data.studentId} not found`,
+      );
     }
 
     // Verify class exists
     const cls = await this.classRepo.findOne({
-      where: { id: data.class.id },
+      where: { id: data.classId },
     });
+
     if (!cls) {
-      throw new NotFoundException(`Class ID ${data.class.id} not found`);
+      throw new NotFoundException(`Class ID ${data.classId} not found`);
     }
 
     // Check if enrollment already exists
     const existing = await this.enrollmentRepo.findOne({
       where: {
-        student: { id: data.student.id },
-        class: { id: data.class.id },
+        student: { id: student.id },
+        class: { id: data.classId },
       },
     });
 
@@ -90,9 +85,11 @@ export class EnrollmentsService {
     }
 
     const enrollment = this.enrollmentRepo.create({
-      ...data,
+      student,
+      class: cls,
       status: EnrollmentStatus.PENDING,
     });
+
     return this.enrollmentRepo.save(enrollment);
   }
 

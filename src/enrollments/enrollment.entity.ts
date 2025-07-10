@@ -26,9 +26,15 @@ export class Enrollment {
   @JoinColumn({ name: 'studentId' })
   student: Student;
 
+  @Column({ nullable: false })
+  studentId: number; // References Student.id
+
   @ManyToOne(() => Class, (cls) => cls.enrollments)
   @JoinColumn({ name: 'classId' })
   class: Class;
+
+  @Column({ nullable: false })
+  classId: string; // References Class.id
 
   @Column({
     type: 'enum',

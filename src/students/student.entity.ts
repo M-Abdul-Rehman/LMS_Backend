@@ -13,7 +13,7 @@ export class Student {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: null })
+  @Column({ unique: true })
   studentId: string;
 
   @Column()
